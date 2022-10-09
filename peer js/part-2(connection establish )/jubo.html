@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jubo</title>
+
+     <!-- Bootstrap CSS File -->
+     <link rel="stylesheet" href="./css/bootstrap.min.css">
+</head>
+<body>
+
+
+    <div class="container">
+        <h3 class="selfPeerId">jubo peer id</h3>
+        <br>
+        <p class="conn-status text-danger">Connection Status</p>
+        <br>
+    
+        <input type="text" placeholder="enter partner peer id" class="form-control partnerPeerId">
+        <br>
+        <button class="btn btn-primary connBtn"> Connect</button>
+    </div>
+   
+    
+
+    <!-- Jquery JS File -->
+    <script src="./js/jquery-3.6.1.min.js"></script>
+    <!-- Peer JS File *******-->
+    <script src="./js/peerjs.min.js"></script>
+    <!-- Bootstrap JS File -->
+    <script src="./js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // our custome javascript code 
+
+        let peer = new Peer();
+        peer.on('open',(peerId)=>{
+            console.log(peerId)
+            document.querySelector('.selfPeerId').innerHTML ="jubo peer id : "+peerId
+        })
+
+
+        var afterConection = (p1)=>
+        {
+            var partnerPeerId = document.querySelector('.partnerPeerId').value;
+            
+            var connObj = peer.connect(partnerPeerId);
+
+            connObj.on('open',(p1)=>{
+                document.querySelector('.conn-status').innerHTML= "Connection Status : Yes"
+            })
+        }
+
+
+        document.querySelector('.connBtn').addEventListener('click',afterConection)
+
+        
+
+    </script>
+</body>
+</html>
