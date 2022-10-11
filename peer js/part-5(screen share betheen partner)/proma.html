@@ -83,7 +83,7 @@
         var receiveCall = (p1)=>
         {
             peer.on('call',(call)=>{
-                navigator.mediaDevices.getUserMedia(constraints).then
+                navigator.mediaDevices.getDisplayMedia(constraints).then
                 (
                     (stream)=>
                     {

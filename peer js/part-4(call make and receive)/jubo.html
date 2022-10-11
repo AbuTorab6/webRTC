@@ -82,33 +82,34 @@
         
         var makeCall = ()=>
         {
-                navigator.mediaDevices.getUserMedia(constraints).then
-                (
-                    (stream)=>
-                    {
-                        
-                        var juboCamera = document.querySelector('.juboCamera');
-                        juboCamera.srcObject=stream;
-                        juboCamera.play();
+            navigator.mediaDevices.getUserMedia(constraints).then
+            (
+                (stream)=>
+                {
+                    //previewing own strema to video tag
+                    var juboCamera = document.querySelector('.juboCamera');
+                    juboCamera.srcObject=stream;
+                    juboCamera.play();
 
-                        
-                        var partnerPeerId = document.querySelector('.partnerPeerId').value;
-                        var call = peer.call(partnerPeerId,stream)
+                    //sending own stream to receiver
+                    var partnerPeerId = document.querySelector('.partnerPeerId').value;
+                    var call = peer.call(partnerPeerId,stream)
 
-                        call.on('stream',(remoteStream)=>{
-                            var promaCamera = document.querySelector('.promaCamera');
-                            promaCamera.srcObject=remoteStream;
-                            promaCamera.play();
-                        })
+                    //receiving call receiver's stream and previewing it to video tag
+                    call.on('stream',(remoteStream)=>{
+                        var promaCamera = document.querySelector('.promaCamera');
+                        promaCamera.srcObject=remoteStream;
+                        promaCamera.play();
+                    })
 
-                    }
-                ).catch
-                (
-                    (err)=>
-                    {
-                        alert(err);
-                    }
-                )
+                }
+            ).catch
+            (
+                (err)=>
+                {
+                    alert(err);
+                }
+            )
         }
    
         document.querySelector('.makeCall').addEventListener('click',makeCall);

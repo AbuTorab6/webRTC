@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>proma</title>
+    <title>Jubo</title>
 
      <!-- Bootstrap CSS File -->
      <link rel="stylesheet" href="./css/bootstrap.min.css">
@@ -13,51 +13,50 @@
 
 
     <div class="container">
-        <h3 class="selfPeerId">Proma peer id</h3>
+        <h3 class="selfPeerId">jubo peer id</h3>
         <br>
         <p class="conn-status text-danger">Connection Status</p>
         <br>
     
-        <input type="text" placeholder="enter partner's peer id" class="form-control partnerPeerId">
+        <input type="text" placeholder="enter partner peer id" class="form-control partnerPeerId">
         <br>
         <button class="btn btn-primary connBtn"> Connect</button>
     </div>
+
 
     <div class="container">
         <div class="row">
             <div class="col">
                 <video src="" class="juboCamera w-100"></video>
                 <h5>Juboraz Camera</h5>
+                <button class="btn btn-primary makeCall">Make Call</button>
             </div>
             <div class="col">
                 <video src="" class="promaCamera w-100"></video>
                 <h5>Proma Camera</h5>
-                <button class="btn btn-primary receiveCall">Receive Call</button>
             </div>
         </div>
     </div>
-   
- 
-   
+  
     
 
     <!-- Jquery JS File -->
     <script src="./js/jquery-3.6.1.min.js"></script>
-    <!-- Peer JS File -->
+    <!-- Peer JS File *******-->
     <script src="./js/peerjs.min.js"></script>
     <!-- Bootstrap JS File -->
     <script src="./js/bootstrap.bundle.min.js"></script>
 
     <script>
-        
+         
 
         //peer ID generate
         let peer = new Peer();
         peer.on('open',(peerId)=>{
             console.log(peerId)
-            document.querySelector('.selfPeerId').innerHTML ="Proma peer id : "+peerId
+            document.querySelector('.selfPeerId').innerHTML ="jubo peer id : "+peerId
         })
-        
+
 
         //connection establish with partner
         var afterConection = (p1)=>
@@ -75,45 +74,44 @@
 
 
 
-        //Receive jubo's call
+        //make call to proma
         const constraints = {
             'video':true,
             'audio':true
         }
-        var receiveCall = (p1)=>
+        
+        var makeCall = ()=>
         {
-            peer.on('call',(call)=>{
-                navigator.mediaDevices.getUserMedia(constraints).then
-                (
-                    (stream)=>
-                    {
-                        //previewing own strema to video tag
+            navigator.mediaDevices.getDisplayMedia(constraints).then
+            (
+                (stream)=>
+                {
+                    //previewing own strema to video tag
+                    var juboCamera = document.querySelector('.juboCamera');
+                    juboCamera.srcObject=stream;
+                    juboCamera.play();
+
+                    //sending own stream to receiver
+                    var partnerPeerId = document.querySelector('.partnerPeerId').value;
+                    var call = peer.call(partnerPeerId,stream)
+
+                    call.on('stream',(remoteStream)=>{
                         var promaCamera = document.querySelector('.promaCamera');
-                        promaCamera.srcObject=stream;
+                        promaCamera.srcObject=remoteStream;
                         promaCamera.play();
+                    })
 
-                        //sending own stream to call maker
-                        call.answer(stream);
-                        
-                        //receiving call maker stream and previewing it to video tag
-                        call.on('stream',(remoteStream)=>{
-                            var juboCamera = document.querySelector('.juboCamera');
-                            juboCamera.srcObject=remoteStream;
-                            juboCamera.play();
-                        })
-                    }
-                ).catch
-                (
-                    (err)=>
-                    {
-                        alert(err);
-                    }
-                )
-            })
+                }
+            ).catch
+            (
+                (err)=>
+                {
+                    alert(err);
+                }
+            )
         }
-
-        document.querySelector('.receiveCall').addEventListener('click',receiveCall)
-
+   
+        document.querySelector('.makeCall').addEventListener('click',makeCall);
         
 
     </script>
